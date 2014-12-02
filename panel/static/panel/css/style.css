@@ -1,14 +1,14 @@
 body, html {
+    margin: 0;
+    padding: 0;
+    color: #ccc;
     width: 100%;
     height: 100%;
-    margin: 0px;
-    color: #ccc;
-    padding: 0px;
     font-size: 25px;
-    background: #000;
-	letter-spacing: 0px;
+    background: #FFF;
+    letter-spacing: 0;
     -webkit-font-smoothing: antialiased;
-    font-family: "HelveticaNeue-Medium";
+    font-family: 'Open Sans', sans-serif;
 }
 
 ul {
@@ -24,12 +24,8 @@ li {
 .translucent {
     z-index: 100;
     background: rgba(0,0,0,.5);
-    box-shadow: inset 0px 0px 30px 0px rgba(0, 0, 0, 0.3);
+    box-shadow: inset 0 0 30 0 rgba(0, 0, 0, 0.3);
 }
-
-/*#top_panel {
-    height: 185px;
-}*/
 
 #current_date_time {
     width: 276px;
@@ -59,91 +55,61 @@ table#events_table {
 }
 
 table#events_table td {
-	padding: 15px 10px;
-	vertical-align: top;
-	overflow: hidden;
-	border-left: 1px solid rgba(255, 255, 255, .1);
+    width: 25%;
+    font-size: 25px;
+    overflow: hidden;
+    padding: 15px 10px;
+    vertical-align: top;
+    border-left: 1px solid rgba(255, 255, 255, .1);
+}
+
+table#events_table td .day {
+    font-size: 25px;
+    text-transform: uppercase;
+    font-family: 'Open Sans', sans-serif;
 }
 
 #forecasts {
-    width: 100%;
+
 }
 
 #forecasts .forecast {
-    float: left;
-	text-align: center;
-	padding: 15px 20px;
-	border-left: 1px solid rgba(255, 255, 255, .1);
+
 }
 
 #forecasts .forecast-today {
-    float: left;
-    padding: 0 15px;
+
 }
 
 #forecasts .forecast span {
-	margin: 0 10px;
-}
 
-/*table#forecasts-table td {
-	text-align: center;
-	padding: 15px 40px;
-	vertical-align: top;
-	border-left: 1px solid rgba(255, 255, 255, .1);
 }
-
-table#forecasts-table td:nth-child(2) {
-	padding: 0;
-}
-
-table#forecasts-table td span {
-	margin: 0 10px;
-}
-
-table#forecasts-table td img {
-	padding: 10px 0;
-}
-
-table#forecasts-table td table td {
-	padding: 0 5px;
-}
-
-table#forecasts-table td table td:first-child {
-	border-left: 0;
-}*/
 
 #calendar {
     float: left;
 }
 
-table td .day {
-	padding: 3px 0;
-	text-transform: uppercase;
-}
-
 table td .more_events {
-	font-weight: bold;
-	text-transform: uppercase;
+
 }
 
 #img-info {
-    top: 45%;
-    right: 0px;
-    z-index: 1000;
-    padding: 15px;
-    display: block;
-    text-align: right;
-    position: absolute;
-    background: rgba(0, 0, 0, 0.298039);
+
 }
 
 .xxsmall {
-    font-size: 15px;
-    letter-spacing: 0px;
-    font-family: "HelveticaNeue-Medium";
+
 }
 
 .dark {
     opacity: .4;
     color: #FFF;
+}
+
+.bright {
+    color: #FFF;
+}
+
+.semi_bold {
+    font-weight: 600;
 }

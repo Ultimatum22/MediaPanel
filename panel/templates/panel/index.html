@@ -4,6 +4,7 @@
         <meta charset="UTF-8" />
         <title>Media Panel</title>
 
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css'>
         <link rel="stylesheet" type="text/css" href="{% static 'panel/css/style.css' %}" />
 
         <script language="javascript">var STATIC_URL = "{{ STATIC_URL|escapejs }}";</script>
@@ -11,7 +12,7 @@
         <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
     </head>
 
-    <body style="background-color: #FFFFFF"> <!-- TEMPORARY -->
+    <body>
         <div id="img-info" class="translucent">
             <div id="img-title" class="xxsmall"></div>
             <div id="img-owner" class="xxsmall"></div>
@@ -23,7 +24,7 @@
         <div class="translucent" id="top_panel" style="position: absolute; left: 0; right: 0; z-index:100; overflow: hidden">
             <div id="current_date_time">
                 <div class="date"></div>
-                <div class="time large"></div>
+                <div class="time large bright"></div>
                 <div style="clear: both;"></div>
             </div>
 

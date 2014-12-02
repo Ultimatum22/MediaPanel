@@ -10,7 +10,7 @@ admin.autodiscover()
 
 urlpatterns = patterns('',
                        url(r'^', include('panel.urls')),
-                       #url(r'^agenda/', include('agenda.urls')),
+                       url(r'^agenda/', include('agenda.urls')),
                        #url(r'^background/', include('background.urls')),
                        #url(r'^admin/', include(admin.site.urls)),
                        )
