@@ -1,0 +1,49 @@
+{% load staticfiles %}
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+    <head lang="en">
+        <meta charset="UTF-8" />
+        <title>Media Panel</title>
+
+        <link rel="stylesheet" type="text/css" href="{% static 'panel/css/style.css' %}" />
+
+        <script language="javascript">var STATIC_URL = "{{ STATIC_URL|escapejs }}";</script>
+
+        <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+    </head>
+
+    <body>
+        <div id="img-info" class="translucent">
+            <div id="img-title" class="xxsmall"></div>
+            <div id="img-owner" class="xxsmall"></div>
+        </div>
+
+        <div id="background-underlay-1"></div>
+        <div id="background-underlay-2"></div>
+
+        <div class="translucent" id="top_panel" style="position: absolute; left: 0; right: 0; z-index:100; overflow: hidden">
+            <div id="current_date_time">
+                <div class="date"></div>
+                <div class="time large"></div>
+                <div style="clear: both;"></div>
+            </div>
+
+            <div id="calendar"></div>
+        </div>
+
+        <div class="translucent" id="weather" style="position: absolute; left: 0; right: 0; bottom: 0; z-index:100"></div>
+
+        <script>
+            $(function() {
+                var myMediaPanel = new mediaPanel;
+
+                myMediaPanel.init();
+
+                myMediaPanel.updatePhoto();
+                myMediaPanel.updateTime();
+                myMediaPanel.updateAgenda();
+                //myMediaPanel.updateWeather();
+            });
+        </script>
+        <script src="{% static 'panel/js/media-panel.js' %}"></script>
+    </body>
+</html>
