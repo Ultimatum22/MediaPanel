@@ -11,7 +11,7 @@
         <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
     </head>
 
-    <body>
+    <body style="background-color: #FFFFFF"> <!-- TEMPORARY -->
         <div id="img-info" class="translucent">
             <div id="img-title" class="xxsmall"></div>
             <div id="img-owner" class="xxsmall"></div>
@@ -34,11 +34,13 @@
 
         <script>
             $(function() {
+                window.alert("Width x Height = "+ $(window).width() + " X "+ $(window).height());
+
                 var myMediaPanel = new mediaPanel;
 
                 myMediaPanel.init();
 
-                myMediaPanel.updatePhoto();
+                //myMediaPanel.updatePhoto();
                 myMediaPanel.updateTime();
                 myMediaPanel.updateAgenda();
                 //myMediaPanel.updateWeather();
