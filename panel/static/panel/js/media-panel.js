@@ -7,7 +7,7 @@
         // variables
         var api = {};
         var pluginName = 'mediaPanel';
- 
+
         // methods
         var constructor = (function() {
             console.log(pluginName + ':constructor');
@@ -27,17 +27,15 @@
          */
         api.updateTime = function() {
 	        var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ];
-	        //var months = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
-	        var months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec' ];
+            var short_months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec' ];
+
 	        var now = new Date();
 	
 			var day = now.getDay();
 			var date = now.getDate();
 			var month = now.getMonth();
 			//var year = now.getFullYear();
-	
-			var date = days[day] + ', ' + date + ' ' + months[month];
-			
+
 			var hours = now.getHours();
 			var minutes = now.getMinutes();
 			var seconds = now.getSeconds();
@@ -48,7 +46,7 @@
 	
 			var time = hours + ':' + minutes;
 	
-			$('#current_date_time .date').html(date);
+			$('#current_date_time .date').html(days[day] + ', ' + date + ' ' + short_months[month]);
 			$('#current_date_time .time').html(time + '<span class="sec">' + seconds + '</span>');
 	
 			setTimeout(function() {
@@ -121,7 +119,10 @@
                     owner += ' <span class="dark">by</span>  ' + data.taken_by;
                 }
 
-                owner += ' <span class="dark">taken</span>  ' + data.date_taken;
+                var full_months = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
+                var date_taken = new Date(data.date_taken);
+
+                owner += ' <span class="dark">taken</span>  ' + date_taken.getDate() + ' ' + full_months[date_taken.getMonth()] + ' ' + date_taken.getFullYear();
 
                 $('#img-owner').html(owner);
                 $('#img-title').html('<span class="dark">Album</span>  ' + data.album);
