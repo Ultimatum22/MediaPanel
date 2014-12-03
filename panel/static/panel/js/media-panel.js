@@ -145,7 +145,7 @@
 			setTimeout(function() {
 				api.updateBackground();
 			}, 30000);
-		
+
 		};
        
        api.init = function(options) {
