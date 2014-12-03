@@ -18,7 +18,8 @@ def index(request):
     max_events = 2
 
     get_events('dave.nieuwenhuijzen@gmail.com')
-    get_events('qv5nr1cqmt4tlut05old032en9g3h6id@import.calendar.google.com')
+    get_events('hkrpljfuicb98hih7205ul6dgk@group.calendar.google.com') # RIBW
+    #get_events('qv5nr1cqmt4tlut05old032en9g3h6id@import.calendar.google.com') # ZPV-Piranha
 
     events_html = '<table id="events_table"><tbody><tr>'
 
@@ -33,9 +34,14 @@ def index(request):
             events_html += '<div class="day">' + ('Today' if start_date.strftime("%Y-%d-%m") == now.strftime("%Y-%d-%m") else start_date.strftime("%A, %d/%m")) + '</div>'
             events_html += '<ul>'
 
-        for event in events[:max_events]:
-            if event.start_date >= now:
-                events_html += '<li><span class="bright">%s</span> <span class="bright semi_bold">%s</span></li>' % (event.start_date.strftime("%H:%M"),  event.summary)
+            events_on_day = 0
+            for event in events:
+                if events_on_day == max_events:
+                    break
+
+                if event.start_date >= now:
+                    events_on_day += 1
+                    events_html += '<li><span class="bright">%s</span> <span class="bright semi_bold">%s</span></li>' % (event.start_date.strftime("%H:%M"),  event.summary)
 
         events_html += '</ul>'
         events_html += '</td>'
@@ -54,7 +60,7 @@ def get_events(calendar_id):
 
     today = datetime.datetime.today()
     today -= relativedelta(days=+1)
-    end_date = today + relativedelta(days=+5)
+    end_date = today + relativedelta(days=+4)
 
     events = google_calendar.service.events().list(
         calendarId=calendar_id,

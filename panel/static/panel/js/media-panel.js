@@ -27,7 +27,8 @@
          */
         api.updateTime = function() {
 	        var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ];
-	        var months = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
+	        //var months = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
+	        var months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec' ];
 	        var now = new Date();
 	
 			var day = now.getDay();
@@ -87,7 +88,7 @@
 		 * Update background photo periodically
 		 *
 		 */
-		api.updatePhoto = function() {
+		api.updateBackground = function() {
             /*$("#progressTimer").progressTimer({
                 timeLimit: 30,
                 baseStyle: 'progress-bar-info',
@@ -115,12 +116,12 @@
                     display: 'block'
                 });
 
-                var owner = '<span class="dark">Photo</span> '
+                var owner = '<span class="dark">Photo</span> ';
                 if(data.taken_by != null) {
-                    owner += ' <span class="dark">by</span>  ' + data.taken_by
+                    owner += ' <span class="dark">by</span>  ' + data.taken_by;
                 }
 
-                owner += ' <span class="dark">taken</span>  ' + data.date_taken
+                owner += ' <span class="dark">taken</span>  ' + data.date_taken;
 
                 $('#img-owner').html(owner);
                 $('#img-title').html('<span class="dark">Album</span>  ' + data.album);
@@ -141,7 +142,7 @@
 			}); //end getJSON
 			
 			setTimeout(function() {
-				api.updatePhoto();
+				api.updateBackground();
 			}, 30000);
 		
 		};

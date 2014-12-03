@@ -94,7 +94,14 @@ table td .more_events {
 }
 
 #img-info {
-
+    top: 45%;
+    right: 0px;
+    z-index: 1000;
+    padding: 15px;
+    display: block;
+    text-align: right;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.298039);
 }
 
 .xxsmall {
