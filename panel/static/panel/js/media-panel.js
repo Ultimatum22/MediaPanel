@@ -26,15 +26,10 @@
          *
          */
         api.updateTime = function() {
-	        var days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ];
+	        var full_days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ];
             var short_months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec' ];
 
 	        var now = new Date();
-	
-			var day = now.getDay();
-			var date = now.getDate();
-			var month = now.getMonth();
-			//var year = now.getFullYear();
 
 			var hours = now.getHours();
 			var minutes = now.getMinutes();
@@ -45,8 +40,8 @@
 			seconds = (seconds < 10 ? '0' : '') + seconds;
 	
 			var time = hours + ':' + minutes;
-	
-			$('#current_date_time .date').html(days[day] + ', ' + date + ' ' + short_months[month]);
+
+			$('#current_date_time .date').html(full_days[now.getDay()] + ', ' + now.getDate() + ' ' + short_months[now.getMonth()]);
 			$('#current_date_time .time').html(time + '<span class="sec">' + seconds + '</span>');
 	
 			setTimeout(function() {
@@ -91,14 +86,16 @@
                 timeLimit: 30,
                 baseStyle: 'progress-bar-info',
             });*/
+            var top;
+            var bottom;
 
-			if ($('#background-underlay-1').is(':visible')) {
-				var top = $('#background-underlay-1');
-				var bottom = $('#background-underlay-2');
+            if ($('#background-underlay-1').is(':visible')) {
+				top = $('#background-underlay-1');
+				bottom = $('#background-underlay-2');
 			}
 			else {
-				var bottom = $('#background-underlay-1');
-				var top = $('#background-underlay-2');
+				bottom = $('#background-underlay-1');
+				top = $('#background-underlay-2');
 			}
 
 			$.getJSON('/background', function(data) {
@@ -152,18 +149,8 @@
             console.log(pluginName + ':api.init');
             api.settings = $.extend({}, api.defaults, options);
 
-            //console.log('TW: ' + $('#top_panel').outerWidth());
-            //console.log('CDTW: ' + $('#current_date_time').outerWidth());
-            //console.log('CW: ' + ($('#top_panel').outerWidth() - $('#current_date_time').outerWidth()));
             $('#calendar').css('width', ($('#top_panel').outerWidth() - $('#current_date_time').outerWidth()));
 
-
-
-            //alert('W: ' + ($('#weather').outerWidth() / 5));
-
-           // privateMethod1('defaults' + JSON.stringify(publicApi.defaults));
-           // privateMethod1('options' + JSON.stringify(options));
-           // privateMethod1('settings' + JSON.stringify(publicApi.settings));
             return api;
         };
  

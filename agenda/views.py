@@ -15,6 +15,7 @@ from django.http import HttpResponse
 
 
 def index(request):
+    max_days = 4
     max_events = 2
 
     get_events('dave.nieuwenhuijzen@gmail.com')
@@ -23,13 +24,20 @@ def index(request):
 
     events_html = '<table id="events_table"><tbody><tr>'
 
+    days_showing = 0
     now = timezone.make_aware(datetime.datetime.now(), timezone.get_default_timezone())
+    print 'Now:', now
+
     all_events = Event.objects.order_by('start_date')
     for start_date, events in groupby(all_events, key=extract_date):
+        if max_days == days_showing:
+            break
+
         events = list(events)
 
         last_event = events[-1]
         if last_event.start_date >= now:
+            days_showing += 1
             events_html += '<td>'
             events_html += '<div class="day">' + ('Today' if start_date.strftime("%Y-%d-%m") == now.strftime("%Y-%d-%m") else start_date.strftime("%A, %d/%m")) + '</div>'
             events_html += '<ul>'
@@ -40,8 +48,16 @@ def index(request):
                     break
 
                 if event.start_date >= now:
+                    print 'Event: %s - Start: %s - End: %s' % (event.summary, event.start_date, event.end_date)
+
+                    if event.end_date < now:
+                        print 'End of event'
+                        continue
+
                     events_on_day += 1
                     events_html += '<li><span class="bright">%s</span> <span class="bright semi_bold">%s</span></li>' % (event.start_date.strftime("%H:%M"),  event.summary)
+
+
 
         events_html += '</ul>'
         events_html += '</td>'
