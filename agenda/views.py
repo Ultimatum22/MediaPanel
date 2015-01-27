@@ -34,12 +34,19 @@ def index(request):
             break
 
         events = list(events)
+        full_days = ['Zondag', 'Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag']
 
         last_event = events[-1]
         if last_event.start_date >= now:
             days_showing += 1
             events_html += '<td>'
-            events_html += '<div class="day">' + ('Today' if start_date.strftime("%Y-%d-%m") == now.strftime("%Y-%d-%m") else start_date.strftime("%A, %d/%m")) + '</div>'
+            #events_html += '<div class="day">' + ('Today' if start_date.strftime("%Y-%d-%m") == now.strftime("%Y-%d-%m") else start_date.strftime("%A, %d/%m")) + '</div>'
+            events_html += '<div class="day">'
+            if start_date.strftime("%Y-%d-%m") == now.strftime("%Y-%d-%m"):
+                events_html += 'Vandaag'
+            else:
+                events_html += full_days[int(start_date.strftime("%w"))] + ' ' + start_date.strftime("%d/%m")
+            events_html += '</div>'
             events_html += '<ul>'
 
             events_on_day = 0
@@ -76,7 +83,7 @@ def get_events(calendar_id):
 
     today = datetime.datetime.today()
     today -= relativedelta(days=+1)
-    end_date = today + relativedelta(days=+4)
+    end_date = today + relativedelta(days=+5)
 
     events = google_calendar.service.events().list(
         calendarId=calendar_id,
