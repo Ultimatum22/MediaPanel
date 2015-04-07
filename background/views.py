@@ -20,12 +20,14 @@ all_photos = []
 downloaded_photos = []
 tmp_directory = os.path.join(BASE_DIR, 'tmp')
 
+
 def index(request):
     if not os.path.exists(tmp_directory):
         os.makedirs(tmp_directory)
 
     random_photo = random.choice(downloaded_photos)
     return HttpResponse(json.dumps(get_photo_info(random_photo)), content_type="application/json")
+
 
 def update(request):
     print "update background"
