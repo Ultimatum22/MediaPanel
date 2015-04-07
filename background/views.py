@@ -43,15 +43,18 @@ def grab_random_photos(number):
             if not os.path.exists(head):
                 os.makedirs(head)
 
-            #shutil.copy2(image_path, random_photo)
+            shutil.copy2(image_path, random_photo)
 
-            try:
-                size = 1920, 1080
-                im = Image.open(image_path)
-                im.thumbnail(size, Image.ANTIALIAS)
-                im.save(random_photo, "JPEG")
-            except IOError:
-                print "cannot create thumbnail for '%s'" % random_photo
+            print 'image_path: ', image_path
+            print 'random_photo: ', random_photo
+
+            # try:
+            #     size = 1920, 1080
+            #     im = Image.open(image_path)
+            #     im.thumbnail(size, Image.ANTIALIAS)
+            #     im.save(random_photo, "JPEG")
+            # except IOError:
+            #     print "cannot create thumbnail for '%s'" % random_photo
 
 
             # basewidth = 1920
