@@ -1,97 +1,206 @@
 import os
 import json
-import fnmatch
 import random
+import shutil
 import string
 from PIL import Image
 import datetime
-import exifread
-
-import pprint
-
+import PIL
 from dateutil.parser import parse
-from django.http import HttpResponse
 
+from django.http import HttpResponse
 from pytz import utc
+
 from background.models import BackgroundImage
 
 from mediapanel import settings
 from mediapanel.settings import BASE_DIR
 
+all_photos = []
+downloaded_photos = []
+tmp_directory = os.path.join(BASE_DIR, 'tmp')
 
 def index(request):
-    random_background = BackgroundImage.objects.all().order_by('?')[0]
+    if not os.path.exists(tmp_directory):
+        os.makedirs(tmp_directory)
 
-    response_data = {}
-    response_data['path'] = random_background.path
+    random_photo = random.choice(downloaded_photos)
+    return HttpResponse(json.dumps(get_photo_info(random_photo)), content_type="application/json")
 
-    response_data['album'] = random_background.album
-    response_data['taken_by'] = random_background.taken_by
-    response_data['date_taken'] = str(random_background.date_taken)
+def update(request):
+    print "update background"
+    flatten_folder_tree()
+    grab_random_photos(10)
 
-    return HttpResponse(json.dumps(response_data), content_type="application/json")
 
+def grab_random_photos(number):
+    if len(downloaded_photos) < 10:
+        for i in range(0, number):
+            image_path = random.choice(all_photos)
+            random_photo = os.path.join(tmp_directory, image_path)
+            head, tail = os.path.split(random_photo)
 
-def gather_images(request):
-    print 'Gathering images'
+            if not os.path.exists(head):
+                os.makedirs(head)
 
-    pp = pprint.PrettyPrinter(indent=4)
-
-    base_path = os.path.join(BASE_DIR, 'mediapanel', settings.STATICFILES_DIRS[0])
-    for dir_path, dir_names, file_names in os.walk(base_path, followlinks=True):
-        for filename in filter(is_image_file, file_names):
-            image_path = os.path.join(dir_path, filename)
-
-            """image_file = open(image_path, 'rb')
-            exif_tags = exifread.process_file(image_file, stop_tag='EXIF DateTimeOriginal')
-
-            date_taken = exif_tags['EXIF DateTimeOriginal']
-            print pp.pprint(date_taken)"""
-
-            #minimum_creation_time = get_minimum_creation_time(exif_data)
-            #minimum_creation_time = get_minimum_creation_time(Image.open(image_path)._getexif())
-            #if minimum_creation_time is None:
-            #    date_taken = datetime.datetime.now().replace(tzinfo=utc)
-            #else:
-            #    date_taken = parse(minimum_creation_time.replace(':', '-', 2)).replace(tzinfo=utc)
+            #shutil.copy2(image_path, random_photo)
 
             try:
-                if Image.open(image_path)._getexif() is None:
-                    date_taken = datetime.datetime.now().replace(tzinfo=utc)
-                else:
-                    minimum_creation_time = get_minimum_creation_time(Image.open(image_path)._getexif())
+                size = 1920, 1080
+                im = Image.open(image_path)
+                im.thumbnail(size, Image.ANTIALIAS)
+                im.save(random_photo, "JPEG")
+            except IOError:
+                print "cannot create thumbnail for '%s'" % random_photo
 
-                    if minimum_creation_time is None:
-                        date_taken = datetime.datetime.now().replace(tzinfo=utc)
-                    else:
-                        date_taken = parse(minimum_creation_time.replace(':', '-', 2)).replace(tzinfo=utc)
-            except AttributeError:
-                print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> AttributeError"
 
-            taken_by = None
-            image_path = os.path.join(os.path.relpath(dir_path, base_path), filename).replace("\\", "/")
-            image_data = image_path.split(os.path.altsep)
+            # basewidth = 1920
+            # image = Image.open(random_photo)
+            # wpercent = (basewidth/float(image.size[0]))
+            # hsize = int((float(image.size[1])*float(wpercent)))
+            # image = image.resize((basewidth,hsize), PIL.Image.ANTIALIAS)
+            # image.save(random_photo)
 
-            #print 'ID:', image_data
+            # size = 1920
+            # image = Image.open(random_photo)
+            # wpercent = (size/float(image.size[0]))
+            # hsize = int((float(image.size[1])*float(wpercent)))
+            # image.thumbnail(size,hsize, Image.ANTIALIAS)
+            # image.save(random_photo, "JPEG")
 
-            album = image_data[-2]
+            downloaded_photos.append(random_photo)
 
-            if len(image_data) > 2:
-                taken_by = image_data[-2]
-                album = string.join(image_data[:-2], ' / ')
 
-            if BackgroundImage.objects.filter(path=image_path).count() == 0:
-                print 'BackgroundImage > add object', image_data
+def flatten_folder_tree():
+    for dir_path, dir_names, file_names in os.walk(os.path.join('mediapanel', settings.STATICFILES_DIRS[0]), followlinks=True):
+        for filename in filter(is_image_file, file_names):
+            all_photos.append(os.path.join(dir_path, filename))
 
-                BackgroundImage(
-                    path=image_path,
-                    album=album,
-                    taken_by=taken_by,
-                    date_taken=date_taken
-                ).save()
 
-    print "BackgroundImage.objects.size(): " + str(BackgroundImage.objects.all().count())
-    return HttpResponse()
+def get_photo_info(image_path1):
+    taken_by = None
+    image_path = os.path.relpath(image_path1).replace("\\", "/")
+    image_data = image_path.split(os.path.altsep)
+
+    response_data = {}
+    response_data['path'] = image_path
+    # response_data['album'] = album
+    # response_data['taken_by'] = taken_by
+    # response_data['date_taken'] = str(date_taken)
+
+    print 'image_path: ', image_path
+
+    return response_data
+
+
+
+    #print 'image_path: ' + image_path
+
+    # try:
+    #     if Image.open(image_path)._getexif() is None:
+    #         date_taken = datetime.datetime.now().replace(tzinfo=utc)
+    #     else:
+    #         minimum_creation_time = get_minimum_creation_time(Image.open(image_path)._getexif())
+    #
+    #         if minimum_creation_time is None:
+    #             date_taken = datetime.datetime.now().replace(tzinfo=utc)
+    #         else:
+    #             date_taken = parse(minimum_creation_time.replace(':', '-', 2)).replace(tzinfo=utc)
+    # except AttributeError:
+    #     print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> AttributeError"
+    #
+    # taken_by = None
+    # #image_path = image_path.replace("\\", "/")
+    # image_path = image_path.replace("\\", "/")
+    # #image_path = image_path.replace("\\", "/")
+    # image_data = image_path.split(os.path.altsep)
+    #
+    # album = image_data[-2]
+    #
+    # if len(image_data) > 2:
+    #     taken_by = image_data[-2]
+    #     album = string.join(image_data[:-2], ' / ')
+    #
+    # response_data = {}
+    # response_data['path'] = image_path
+    # response_data['album'] = album
+    # response_data['taken_by'] = taken_by
+    # response_data['date_taken'] = str(date_taken)
+    #
+    # print 'date_taken: ', response_data['taken_by']
+    #
+    # return response_data
+
+
+# def move(destination, depth=None):
+#     if not depth:
+#         depth = []
+#     for file_or_dir in os.listdir(os.path.join([destination] + depth, "\\")):
+#         if os.path.isfile(file_or_dir):
+#             shutil.move(file_or_dir, destination)
+#         else:
+#             move(destination, os.path.join(depth + [file_or_dir], "\\"))
+
+# def gather_images(request):
+#     print 'Gathering images'
+#
+#     pp = pprint.PrettyPrinter(indent=4)
+#
+#     base_path = os.path.join(BASE_DIR, 'mediapanel', settings.STATICFILES_DIRS[0])
+#     for dir_path, dir_names, file_names in os.walk(base_path, followlinks=True):
+#         for filename in filter(is_image_file, file_names):
+#             image_path = os.path.join(dir_path, filename)
+#
+#             """image_file = open(image_path, 'rb')
+#             exif_tags = exifread.process_file(image_file, stop_tag='EXIF DateTimeOriginal')
+#
+#             date_taken = exif_tags['EXIF DateTimeOriginal']
+#             print pp.pprint(date_taken)"""
+#
+#             #minimum_creation_time = get_minimum_creation_time(exif_data)
+#             #minimum_creation_time = get_minimum_creation_time(Image.open(image_path)._getexif())
+#             #if minimum_creation_time is None:
+#             #    date_taken = datetime.datetime.now().replace(tzinfo=utc)
+#             #else:
+#             #    date_taken = parse(minimum_creation_time.replace(':', '-', 2)).replace(tzinfo=utc)
+#
+#             try:
+#                 if Image.open(image_path)._getexif() is None:
+#                     date_taken = datetime.datetime.now().replace(tzinfo=utc)
+#                 else:
+#                     minimum_creation_time = get_minimum_creation_time(Image.open(image_path)._getexif())
+#
+#                     if minimum_creation_time is None:
+#                         date_taken = datetime.datetime.now().replace(tzinfo=utc)
+#                     else:
+#                         date_taken = parse(minimum_creation_time.replace(':', '-', 2)).replace(tzinfo=utc)
+#             except AttributeError:
+#                 print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> AttributeError"
+#
+#             taken_by = None
+#             image_path = os.path.join(os.path.relpath(dir_path, base_path), filename).replace("\\", "/")
+#             image_data = image_path.split(os.path.altsep)
+#
+#             #print 'ID:', image_data
+#
+#             album = image_data[-2]
+#
+#             if len(image_data) > 2:
+#                 taken_by = image_data[-2]
+#                 album = string.join(image_data[:-2], ' / ')
+#
+#             if BackgroundImage.objects.filter(path=image_path).count() == 0:
+#                 print 'BackgroundImage > add object', image_data
+#
+#                 BackgroundImage(
+#                     path=image_path,
+#                     album=album,
+#                     taken_by=taken_by,
+#                     date_taken=date_taken
+#                 ).save()
+#
+#     print "BackgroundImage.objects.size(): " + str(BackgroundImage.objects.all().count())
+#     return HttpResponse()
 
 
 def get_minimum_creation_time(exif_data):

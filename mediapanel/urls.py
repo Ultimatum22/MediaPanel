@@ -18,5 +18,5 @@ urlpatterns = patterns('',
 urlpatterns += patterns('django.views.static',
                         (r'^static_media/(?P<path>.*)$',
                          'serve', {
-                            'document_root': os.path.join(BASE_DIR, 'mediapanel', settings.STATICFILES_DIRS[0]),
+                            'document_root': BASE_DIR,
                             'show_indexes': True}), )

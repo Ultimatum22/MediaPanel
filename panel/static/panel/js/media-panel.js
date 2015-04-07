@@ -77,7 +77,18 @@
 			}, 900000);
 
             $('.forecast').css('width', ($('#weather').outerWidth() / 5));
-       };
+        };
+
+        api.gatherBackgrounds = function() {
+            $.get('/background/update', function(data) {
+                // Do nothing, just call url
+            });
+
+            // Every 5 minutes
+            setTimeout(function() {
+                api.gatherBackgrounds();
+            }, 300000);
+        }
 
 		/**
 		 * Update background photo periodically
@@ -140,11 +151,10 @@
                 });
 			
 			}); //end getJSON
-			
-			setTimeout(function() {
-				api.updateBackground();
-			}, 30000);
 
+            setTimeout(function() {
+                api.updateBackground();
+            }, 30000);
 		};
        
        api.init = function(options) {
