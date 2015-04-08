@@ -32,11 +32,15 @@ def index(request):
 def update(request):
     print "update background"
     flatten_folder_tree()
+    print 'all_photos ', len(all_photos)
     grab_random_photos(10)
+    print 'downloaded_photos ', len(downloaded_photos)
+
+    return HttpResponse(None)
 
 
 def grab_random_photos(number):
-    if len(downloaded_photos) < 10:
+    # if len(downloaded_photos) < 10:
         for i in range(0, number):
             image_path = random.choice(all_photos)
             random_photo = os.path.join(tmp_directory, image_path)
