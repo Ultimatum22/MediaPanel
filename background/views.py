@@ -18,7 +18,7 @@ from mediapanel.settings import BASE_DIR
 
 all_photos = []
 downloaded_photos = []
-tmp_directory = os.path.join(BASE_DIR, 'tmp')
+tmp_directory = os.path.join(BASE_DIR, 'mediapanel', 'tmp')
 
 
 def index(request):
@@ -43,15 +43,20 @@ def grab_random_photos(number):
     # if len(downloaded_photos) < 10:
         for i in range(0, number):
             image_path = random.choice(all_photos)
-            random_photo = os.path.join(tmp_directory, image_path)
-            head, tail = os.path.split(random_photo)
 
-            if not os.path.exists(head):
-                os.makedirs(head)
+            head, tail = os.path.split(image_path)
+
+            print 'rel head: ', os.path.relpath(head)
+            print 'tmp_directory: ', tmp_directory
+
+            random_photo = os.path.join(tmp_directory, os.path.relpath(head), tail)
+
+            if not os.path.exists(os.path.join(tmp_directory, os.path.relpath(head))):
+                os.makedirs(os.path.join(tmp_directory, os.path.relpath(head)))
 
             shutil.copy2(image_path, random_photo)
-
-            print 'image_path: ', image_path
+            #
+            # print 'image_path: ', image_path
             print 'random_photo: ', random_photo
 
             # try:
@@ -81,7 +86,8 @@ def grab_random_photos(number):
 
 
 def flatten_folder_tree():
-    for dir_path, dir_names, file_names in os.walk(os.path.join('mediapanel', settings.STATICFILES_DIRS[0]), followlinks=True):
+    base_path = os.path.join(BASE_DIR, 'mediapanel', settings.STATICFILES_DIRS[0])
+    for dir_path, dir_names, file_names in os.walk(base_path, followlinks=True):
         for filename in filter(is_image_file, file_names):
             all_photos.append(os.path.join(dir_path, filename))
 
