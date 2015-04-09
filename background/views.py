@@ -1,24 +1,17 @@
 import os
 import json
 import random
-import shutil
-import string
 from PIL import Image
-import datetime
-import PIL
-from dateutil.parser import parse
 
 from django.http import HttpResponse
-from pytz import utc
-
-from background.models import BackgroundImage
+import shutil
 
 from mediapanel import settings
 from mediapanel.settings import BASE_DIR
 
 all_photos = []
 downloaded_photos = []
-tmp_directory = os.path.join(BASE_DIR, 'mediapanel', 'tmp')
+tmp_directory = os.path.join(BASE_DIR, 'tmp')
 
 
 def index(request):
@@ -59,13 +52,13 @@ def grab_random_photos(number):
             # print 'image_path: ', image_path
             print 'random_photo: ', random_photo
 
-            # try:
-            #     size = 1920, 1080
-            #     im = Image.open(image_path)
-            #     im.thumbnail(size, Image.ANTIALIAS)
-            #     im.save(random_photo, "JPEG")
-            # except IOError:
-            #     print "cannot create thumbnail for '%s'" % random_photo
+            try:
+                size = 1920, 1080
+                im = Image.open(random_photo)
+                im.thumbnail(size, Image.ANTIALIAS)
+                im.save(random_photo, "JPEG")
+            except IOError:
+                print "cannot create thumbnail for '%s'" % random_photo
 
 
             # basewidth = 1920
@@ -86,7 +79,7 @@ def grab_random_photos(number):
 
 
 def flatten_folder_tree():
-    base_path = os.path.join(BASE_DIR, 'mediapanel', settings.STATICFILES_DIRS[0])
+    base_path = os.path.join(BASE_DIR, settings.STATICFILES_DIRS[0])
     for dir_path, dir_names, file_names in os.walk(base_path, followlinks=True):
         for filename in filter(is_image_file, file_names):
             all_photos.append(os.path.join(dir_path, filename))
