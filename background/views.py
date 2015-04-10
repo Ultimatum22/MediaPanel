@@ -11,7 +11,7 @@ from mediapanel.settings import BASE_DIR
 
 all_photos = []
 downloaded_photos = []
-tmp_directory = os.path.join(BASE_DIR, 'tmp')
+tmp_directory = 'tmp'
 
 
 def index(request):
