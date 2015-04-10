@@ -42,23 +42,24 @@ def grab_random_photos(number):
             print 'rel head: ', os.path.relpath(head)
             print 'tmp_directory: ', tmp_directory
 
-            random_photo = os.path.join('MediaPanel', tmp_directory, os.path.relpath(head), tail)
+            random_photo_path = os.path.join('MediaPanel', tmp_directory, os.path.relpath(head))
+            random_photo_file = os.path.join(random_photo_path, tail)
 
-            if not os.path.exists(os.path.join(tmp_directory, os.path.relpath(head))):
-                os.makedirs(os.path.join(tmp_directory, os.path.relpath(head)))
+            if not os.path.exists(random_photo_path):
+                os.makedirs(random_photo_path)
 
-            shutil.copy2(image_path, random_photo)
+            shutil.copy2(image_path, random_photo_file)
             #
             # print 'image_path: ', image_path
-            print 'random_photo: ', random_photo
+            print 'random_photo: ', random_photo_file
 
             try:
                 size = 1920, 1080
-                im = Image.open(random_photo)
+                im = Image.open(random_photo_file)
                 im.thumbnail(size, Image.ANTIALIAS)
-                im.save(random_photo, "JPEG")
+                im.save(random_photo_file, "JPEG")
             except IOError:
-                print "cannot create thumbnail for '%s'" % random_photo
+                print "cannot create thumbnail for '%s'" % random_photo_file
 
 
             # basewidth = 1920
@@ -75,7 +76,7 @@ def grab_random_photos(number):
             # image.thumbnail(size,hsize, Image.ANTIALIAS)
             # image.save(random_photo, "JPEG")
 
-            downloaded_photos.append(random_photo)
+            downloaded_photos.append(random_photo_file)
 
 
 def flatten_folder_tree():
