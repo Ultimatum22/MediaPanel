@@ -50,8 +50,8 @@ def grab_random_photos(number):
 
             shutil.copy2(image_path, random_photo_file)
             #
-            # print 'image_path: ', image_path
-            print 'random_photo: ', random_photo_file
+            print 'random_photo_path: ', random_photo_path
+            print 'random_photo_file: ', random_photo_file
 
             try:
                 size = 1920, 1080
