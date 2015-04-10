@@ -42,7 +42,7 @@ def grab_random_photos(number):
             print 'rel head: ', os.path.relpath(head)
             print 'tmp_directory: ', tmp_directory
 
-            random_photo = os.path.join(tmp_directory, os.path.relpath(head), tail)
+            random_photo = os.path.join('MediaPanel', tmp_directory, os.path.relpath(head), tail)
 
             if not os.path.exists(os.path.join(tmp_directory, os.path.relpath(head))):
                 os.makedirs(os.path.join(tmp_directory, os.path.relpath(head)))
