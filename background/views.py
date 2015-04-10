@@ -88,7 +88,7 @@ def flatten_folder_tree():
 
 def get_photo_info(image_path1):
     taken_by = None
-    image_path = os.path.relpath(image_path1).replace("\\", "/")
+    image_path = image_path1.replace("\\", "/")
     image_data = image_path.split(os.path.altsep)
 
     response_data = {}
