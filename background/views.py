@@ -81,6 +81,7 @@ def grab_random_photos(number):
 
 def flatten_folder_tree():
     base_path = os.path.join(BASE_DIR, settings.STATICFILES_DIRS[0])
+    print 'flatten_folder_tree > base_path > ', base_path
     for dir_path, dir_names, file_names in os.walk(base_path, followlinks=True):
         for filename in filter(is_image_file, file_names):
             print '>>: ', os.path.join(dir_path, filename)
