@@ -1,17 +1,21 @@
 import os
 import json
 import random
+import string
 from PIL import Image
+import datetime
+import dateutil
 
 from django.http import HttpResponse
 import shutil
+from pytz import utc
 
 from mediapanel import settings
 from mediapanel.settings import BASE_DIR
 
 all_photos = []
 downloaded_photos = []
-tmp_directory = 'tmp'
+tmp_directory = os.path.join('MediaPanel', 'tmp')
 
 
 def index(request):
@@ -33,25 +37,19 @@ def update(request):
 
 
 def grab_random_photos(number):
-    # if len(downloaded_photos) < 10:
+    if len(downloaded_photos) < 10:
         for i in range(0, number):
             image_path = random.choice(all_photos)
 
             head, tail = os.path.split(image_path)
 
-            print 'rel head: ', os.path.relpath(head)
-            print 'tmp_directory: ', tmp_directory
-
-            random_photo_path = os.path.join('MediaPanel', tmp_directory, os.path.relpath(head))
+            random_photo_path = os.path.join(tmp_directory, os.path.relpath(head))
             random_photo_file = os.path.join(random_photo_path, tail)
 
             if not os.path.exists(random_photo_path):
                 os.makedirs(random_photo_path)
 
             shutil.copy2(image_path, random_photo_file)
-            #
-            print 'random_photo_path: ', random_photo_path
-            print 'random_photo_file: ', random_photo_file
 
             try:
                 size = 1920, 1080
@@ -60,21 +58,6 @@ def grab_random_photos(number):
                 im.save(random_photo_file, "JPEG")
             except IOError:
                 print "cannot create thumbnail for '%s'" % random_photo_file
-
-
-            # basewidth = 1920
-            # image = Image.open(random_photo)
-            # wpercent = (basewidth/float(image.size[0]))
-            # hsize = int((float(image.size[1])*float(wpercent)))
-            # image = image.resize((basewidth,hsize), PIL.Image.ANTIALIAS)
-            # image.save(random_photo)
-
-            # size = 1920
-            # image = Image.open(random_photo)
-            # wpercent = (size/float(image.size[0]))
-            # hsize = int((float(image.size[1])*float(wpercent)))
-            # image.thumbnail(size,hsize, Image.ANTIALIAS)
-            # image.save(random_photo, "JPEG")
 
             downloaded_photos.append(random_photo_file)
 
@@ -93,125 +76,40 @@ def get_photo_info(image_path1):
     image_path = image_path1.replace("\\", "/")
     image_data = image_path.split(os.path.altsep)
 
+    try:
+        if Image.open(image_path)._getexif() is None:
+            date_taken = datetime.datetime.now().replace(tzinfo=utc)
+        else:
+            minimum_creation_time = get_minimum_creation_time(Image.open(image_path)._getexif())
+
+            if minimum_creation_time is None:
+                date_taken = datetime.datetime.now().replace(tzinfo=utc)
+            else:
+                date_taken = dateutil.parse(minimum_creation_time.replace(':', '-', 2)).replace(tzinfo=utc)
+    except AttributeError:
+        print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> AttributeError"
+
+    taken_by = None
+    image_path = image_path.replace("\\", "/")
+    image_data = image_path.split(os.path.altsep)
+
+    print 'image_data: ', len(image_data)
+    print 'image_data1: ', image_data[:-2]
+    if len(image_data) > 2:
+        taken_by = image_data[-2]
+        album = string.join(image_data[3:-1], ' / ')
+
     response_data = {}
     response_data['path'] = image_path
-    # response_data['album'] = album
-    # response_data['taken_by'] = taken_by
-    # response_data['date_taken'] = str(date_taken)
+    response_data['album'] = album
+    response_data['taken_by'] = taken_by
+    response_data['date_taken'] = str(date_taken)
 
     print 'image_path: ', image_path
 
+    #os.remove(image_path)
+
     return response_data
-
-
-
-    #print 'image_path: ' + image_path
-
-    # try:
-    #     if Image.open(image_path)._getexif() is None:
-    #         date_taken = datetime.datetime.now().replace(tzinfo=utc)
-    #     else:
-    #         minimum_creation_time = get_minimum_creation_time(Image.open(image_path)._getexif())
-    #
-    #         if minimum_creation_time is None:
-    #             date_taken = datetime.datetime.now().replace(tzinfo=utc)
-    #         else:
-    #             date_taken = parse(minimum_creation_time.replace(':', '-', 2)).replace(tzinfo=utc)
-    # except AttributeError:
-    #     print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> AttributeError"
-    #
-    # taken_by = None
-    # #image_path = image_path.replace("\\", "/")
-    # image_path = image_path.replace("\\", "/")
-    # #image_path = image_path.replace("\\", "/")
-    # image_data = image_path.split(os.path.altsep)
-    #
-    # album = image_data[-2]
-    #
-    # if len(image_data) > 2:
-    #     taken_by = image_data[-2]
-    #     album = string.join(image_data[:-2], ' / ')
-    #
-    # response_data = {}
-    # response_data['path'] = image_path
-    # response_data['album'] = album
-    # response_data['taken_by'] = taken_by
-    # response_data['date_taken'] = str(date_taken)
-    #
-    # print 'date_taken: ', response_data['taken_by']
-    #
-    # return response_data
-
-
-# def move(destination, depth=None):
-#     if not depth:
-#         depth = []
-#     for file_or_dir in os.listdir(os.path.join([destination] + depth, "\\")):
-#         if os.path.isfile(file_or_dir):
-#             shutil.move(file_or_dir, destination)
-#         else:
-#             move(destination, os.path.join(depth + [file_or_dir], "\\"))
-
-# def gather_images(request):
-#     print 'Gathering images'
-#
-#     pp = pprint.PrettyPrinter(indent=4)
-#
-#     base_path = os.path.join(BASE_DIR, 'mediapanel', settings.STATICFILES_DIRS[0])
-#     for dir_path, dir_names, file_names in os.walk(base_path, followlinks=True):
-#         for filename in filter(is_image_file, file_names):
-#             image_path = os.path.join(dir_path, filename)
-#
-#             """image_file = open(image_path, 'rb')
-#             exif_tags = exifread.process_file(image_file, stop_tag='EXIF DateTimeOriginal')
-#
-#             date_taken = exif_tags['EXIF DateTimeOriginal']
-#             print pp.pprint(date_taken)"""
-#
-#             #minimum_creation_time = get_minimum_creation_time(exif_data)
-#             #minimum_creation_time = get_minimum_creation_time(Image.open(image_path)._getexif())
-#             #if minimum_creation_time is None:
-#             #    date_taken = datetime.datetime.now().replace(tzinfo=utc)
-#             #else:
-#             #    date_taken = parse(minimum_creation_time.replace(':', '-', 2)).replace(tzinfo=utc)
-#
-#             try:
-#                 if Image.open(image_path)._getexif() is None:
-#                     date_taken = datetime.datetime.now().replace(tzinfo=utc)
-#                 else:
-#                     minimum_creation_time = get_minimum_creation_time(Image.open(image_path)._getexif())
-#
-#                     if minimum_creation_time is None:
-#                         date_taken = datetime.datetime.now().replace(tzinfo=utc)
-#                     else:
-#                         date_taken = parse(minimum_creation_time.replace(':', '-', 2)).replace(tzinfo=utc)
-#             except AttributeError:
-#                 print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> AttributeError"
-#
-#             taken_by = None
-#             image_path = os.path.join(os.path.relpath(dir_path, base_path), filename).replace("\\", "/")
-#             image_data = image_path.split(os.path.altsep)
-#
-#             #print 'ID:', image_data
-#
-#             album = image_data[-2]
-#
-#             if len(image_data) > 2:
-#                 taken_by = image_data[-2]
-#                 album = string.join(image_data[:-2], ' / ')
-#
-#             if BackgroundImage.objects.filter(path=image_path).count() == 0:
-#                 print 'BackgroundImage > add object', image_data
-#
-#                 BackgroundImage(
-#                     path=image_path,
-#                     album=album,
-#                     taken_by=taken_by,
-#                     date_taken=date_taken
-#                 ).save()
-#
-#     print "BackgroundImage.objects.size(): " + str(BackgroundImage.objects.all().count())
-#     return HttpResponse()
 
 
 def get_minimum_creation_time(exif_data):
