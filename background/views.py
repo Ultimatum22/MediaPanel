@@ -107,7 +107,7 @@ def get_photo_info(image_path1):
 
     print 'image_path: ', image_path
 
-    #os.remove(image_path)
+    # os.remove(image_path)
 
     return response_data
 

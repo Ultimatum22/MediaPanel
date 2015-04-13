@@ -4,12 +4,13 @@
         <meta charset="UTF-8" />
         <title>Media Panel</title>
 
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css'>
-        <link rel="stylesheet" type="text/css" href="{% static 'panel/css/style.css' %}" />
-
         <script language="javascript">var STATIC_URL = "{{ STATIC_URL|escapejs }}";</script>
 
         <script src="http://code.jquery.com/jquery-2.1.1.min.js"></script>
+
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400,600,700,300' rel='stylesheet' type='text/css'>
+        <link rel="stylesheet" type="text/css" href="{% static 'panel/css/style.css' %}" />
+        <link rel="stylesheet" type="text/css" href="{% static 'panel/css/weather-icons.css' %}" />
     </head>
 
     <body>
@@ -31,7 +32,7 @@
             <div id="calendar"></div>
         </div>
 
-        <div class="translucent" id="weather" style="position: absolute; left: 0; right: 0; bottom: 0; z-index:100"></div>
+        <div id="weather" class="translucent" style="position: absolute; left: 0; right: 0; bottom: 0; z-index:100"></div>
 
         <script>
             $(function() {
@@ -44,7 +45,7 @@
                 myMediaPanel.updateTime();
                 myMediaPanel.updateAgenda();
                 myMediaPanel.gatherBackgrounds();
-                //myMediaPanel.updateWeather();
+                myMediaPanel.updateWeather10days();
             });
         </script>
         <script src="{% static 'panel/js/media-panel.js' %}"></script>

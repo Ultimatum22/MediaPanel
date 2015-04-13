@@ -65,16 +65,31 @@
         };
 
         /**
-		 * Update weather every 15 minutes
-		 *
-		 */
-        api.updateWeather = function() {
-	     	$('#weather').load('/panel/weather');
+         * Update weather every 5 minutes
+         *
+         */
+        api.updateWeatherHourly = function() {
+            $('#weather').load('/weather/forecast_hourly_today');
 
-			// 15 minutes
-			setTimeout(function() {
-				api.updateWeather();
-			}, 900000);
+            // 15 minutes
+            setTimeout(function() {
+                api.updateWeatherHourly();
+            }, 900000);
+
+            $('.forecast').css('width', ($('#weather').outerWidth() / 5));
+        };
+
+        /**
+         * Update weather every 60 minutes
+         *
+         */
+        api.updateWeather10days = function() {
+            $('#weather').load('/weather/forecast_10_days');
+
+            // 15 minutes
+            setTimeout(function() {
+                api.updateWeather10days();
+            }, 3600000);
 
             $('.forecast').css('width', ($('#weather').outerWidth() / 5));
         };
