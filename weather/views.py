@@ -20,43 +20,42 @@ def forecast_10_days(request):
     api_key, location = get_api_data()
 
     base_url = "http://api.wunderground.com/api/%s" % api_key
-    astronomy_url = base_url + "/astronomy/q/%s.json" % quote(location)
+    forecast_astronomy_url = base_url + "/astronomy/q/%s.json" % quote(location)
     forecast_10_days_url = base_url + "/conditions/forecast10day/q/%s.json" % quote(location)
+    forecast_current_url = base_url + "/conditions/q/%s.json" % quote(location)
+    # forecast_hourly_url = base_url + "/hourly/q/%s.json" % quote(location)
 
     print "Fetching forecast for 10 days... ", forecast_10_days_url
 
     try:
+        forecast_astronomy_response = urlopen(forecast_astronomy_url)
         forecast_10_days_response = urlopen(forecast_10_days_url)
-        astronomy_response = urlopen(astronomy_url)
+        forecast_current_response = urlopen(forecast_current_url)
+        # forecast_hourly_response = urlopen(forecast_hourly_url)
     except URLError as e:
         if hasattr(e, 'reason'):
             print e.reason
         elif hasattr(e, 'code'):
             print "Status returned: " + str(e.code)
 
-    astronomy_data = json.loads(astronomy_response.read().decode())
+    astronomy_data = json.loads(forecast_astronomy_response.read().decode())
     ten_days_forecast_data = json.loads(forecast_10_days_response.read().decode())
+    current_forecast_data = json.loads(forecast_current_response.read().decode())
+    # hourly_forecast_data = json.loads(forecast_hourly_response.read().decode())
 
     print 'astronomy_data: ', astronomy_data
 
-    # Assign forecast to a dictionary
-    forecast_dict = []
-
     try:
+        current_forecast = current_forecast_data['current_observation']
         ten_days_forecast = ten_days_forecast_data['forecast']['simpleforecast']['forecastday']
     except KeyError:
         print 'No Data'
 
     print "Data fetched successfully"
 
-    sunset_time = astronomy_data['sun_phase']['sunset']['hour'] + ":" + astronomy_data['sun_phase']['sunset']['minute']
-    sunrise_time = astronomy_data['sun_phase']['sunrise']['hour'] + ":" + astronomy_data['sun_phase']['sunrise']['minute']
-
-    print 'datetime.datetime.now().time(): ', datetime.now().strftime('%H')
-
     weather_html = '<table style="width: 100%; border-top: 1px solid rgba(255,255,255,.1);"><tbody><tr>'
     weather_html += '<td style="padding: 0 20px 5px 20px; width: 250px;">'
-    weather_html += '<div class="bright large">12<sup>&deg;</sup>'
+    weather_html += '<div class="bright large">' + str(current_forecast['temp_c']) + '<sup>&deg;</sup>'
     weather_html += '<span class="wi wi-day-sunny" style="font-size: 70px;" title="clear"></span>'
     weather_html += '</div>'
 
@@ -64,12 +63,17 @@ def forecast_10_days(request):
 
     current_hour = datetime.now().strftime('%H')
     current_minute = datetime.now().strftime('%M')
-    if (current_hour >= astronomy_data['sun_phase']['sunset']['hour'] and current_minute >= astronomy_data['sun_phase']['sunset']['minute']) and (current_hour < astronomy_data['sun_phase']['sunrise']['hour'] and current_minute < astronomy_data['sun_phase']['sunrise']['minute']):
+    wind = "%s kph %s" % (current_forecast['wind_kph'], current_forecast['wind_dir'])
+
+    weather_html += '<span class="wi wi-strong-wind"></span> ' + wind + ' &nbsp;<span class="wi wi-wind-default _%s-deg"></span> &nbsp;&nbsp;' % current_forecast['wind_degrees']
+
+    if current_hour >= astronomy_data['sun_phase']['sunset']['hour'] and current_minute > astronomy_data['sun_phase']['sunset']['minute']:
         print 'Sunset'
-        weather_html += '<span class="wi wi-strong-wind"></span> 7 wnw &nbsp;&nbsp;<span class="wi wi-sunset"></span> %s:%s</div>' % (astronomy_data['sun_phase']['sunset']['hour'], astronomy_data['sun_phase']['sunset']['minute'])
+        weather_html += '<span class="wi wi-sunrise"></span> %s:%s</div>' % (astronomy_data['sun_phase']['sunrise']['hour'], astronomy_data['sun_phase']['sunrise']['minute'])
     else:
         print 'Sunrise'
-        weather_html += '<span class="wi wi-strong-wind"></span> 7 wnw &nbsp;&nbsp;<span class="wi wi-sunrise"></span> %s:%s</div>' % (astronomy_data['sun_phase']['sunrise']['hour'], astronomy_data['sun_phase']['sunrise']['minute'])
+        weather_html += '<span class="wi wi-sunset"></span> %s:%s</div>' % (astronomy_data['sun_phase']['sunset']['hour'], astronomy_data['sun_phase']['sunset']['minute'])
+
     weather_html += '</td>'
 
     # count = 1
