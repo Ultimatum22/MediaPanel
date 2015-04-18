@@ -116,10 +116,10 @@ def forecast_10_days(request):
             weather_icon_css = "wi-day-" + weather_icon
 
         weather_html += '<td style="padding: 5px 40px; text-align: center; border-left: 1px solid rgba(255,255,255,.1); line-height: 2em;">'
-        weather_html += '<div class="day bold" style="margin-bottom: 15px">' + date['weekday'] + '</div>'
-        weather_html += '<span class="wi ' + weather_icon_css + ' bright medium"></span><br/>'
-        weather_html += '<span class="bright semi-bold" style="margin: 0 10px;">' + node['high']['celsius'] + '</span>'
-        weather_html += '<span class="bright semi-bold" style="margin: 0 10px;">' + node['low']['celsius'] + '</span></td>'
+        weather_html += '<div class="day bold medium">' + date['weekday'] + '</div>'
+        weather_html += '<span class="wi ' + weather_icon_css + ' bright medium" style="margin: 10px 0"></span><br/>'
+        weather_html += '<span class="bright semi-bold medium" style="margin: 0 10px;">' + node['high']['celsius'] + '</span>'
+        weather_html += '<span class="bright semi-bold medium" style="margin: 0 10px;">' + node['low']['celsius'] + '</span></td>'
 
         # print 'Count: ', count
         # date = node['date']

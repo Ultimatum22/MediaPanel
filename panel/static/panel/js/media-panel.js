@@ -8,6 +8,10 @@
         var api = {};
         var pluginName = 'mediaPanel';
 
+        var full_days = [ 'Zondag', 'Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag' ];
+        var short_months = [ 'Jan', 'Feb', 'Maa', 'Apr', 'Mei', 'Juni', 'Juli', 'Aug', 'Sept', 'Okt', 'Nov', 'Dec' ];
+        var full_months = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
+
         // methods
         var constructor = (function() {
             console.log(pluginName + ':constructor');
@@ -26,11 +30,6 @@
          *
          */
         api.updateTime = function() {
-	        //var full_days = [ 'Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday' ];
-	        var full_days = [ 'Zondag', 'Maandag', 'Dinsdag', 'Woensdag', 'Donderdag', 'Vrijdag', 'Zaterdag' ];
-            //var short_months = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec' ];
-            var short_months = [ 'Jan', 'Feb', 'Maa', 'Apr', 'Mei', 'Juni', 'Juli', 'Aug', 'Sept', 'Okt', 'Nov', 'Dec' ];
-
 	        var now = new Date();
 
 			var hours = now.getHours();
@@ -43,7 +42,7 @@
 	
 			var time = hours + ':' + minutes;
 
-			$('#current_date_time .date').html(full_days[now.getDay()] + ', ' + now.getDate() + ' ' + short_months[now.getMonth()]);
+			$('#current_date_time .date').html(full_days[now.getDay()] + ', ' + now.getDate() + ' ' + full_months[now.getMonth()]);
 			$('#current_date_time .time').html(time + '<span class="sec">' + seconds + '</span>');
 	
 			setTimeout(function() {
@@ -140,7 +139,6 @@
                     owner += ' <span class="dark">by</span>  ' + data.taken_by;
                 }
 
-                var full_months = [ 'January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December' ];
                 var date_taken = new Date(data.date_taken);
 
                 owner += ' <span class="dark">taken</span>  ' + date_taken.getDate() + ' ' + full_months[date_taken.getMonth()] + ' ' + date_taken.getFullYear();
