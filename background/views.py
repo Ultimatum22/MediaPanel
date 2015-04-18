@@ -76,10 +76,10 @@ def get_photo_info(image_path1):
     image_path = image_path1.replace("\\", "/")
     image_data = image_path.split(os.path.altsep)
 
+    date_taken = datetime.datetime.now().replace(tzinfo=utc)
+
     try:
-        if Image.open(image_path)._getexif() is None:
-            date_taken = datetime.datetime.now().replace(tzinfo=utc)
-        else:
+        if Image.open(image_path)._getexif() is not None:
             minimum_creation_time = get_minimum_creation_time(Image.open(image_path)._getexif())
 
             if minimum_creation_time is None:

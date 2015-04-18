@@ -62,7 +62,7 @@ def index(request):
                         continue
 
                     events_on_day += 1
-                    events_html += '<li><span class="bright">%s</span> <span class="bright semi_bold">%s</span></li>' % (event.start_date.strftime("%H:%M"),  event.summary)
+                    events_html += '<li><span class="bright">%s</span> <span class="bright semi-bold">%s</span></li>' % (event.start_date.strftime("%H:%M"),  event.summary)
 
 
 

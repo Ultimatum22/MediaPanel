@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from urllib import quote, urlopen
 from urllib2 import URLError
 import configparser
@@ -54,21 +55,35 @@ def forecast_10_days(request):
 
     print "Data fetched successfully"
 
+    pattern = re.compile(r'[A-Za-z]+ \d+ (.+):(.+):\d+')
+    time_string = current_forecast['local_time_rfc822']
+    hour = int(pattern.search(time_string).group(1))
+    minute = int(pattern.search(time_string).group(2))
+
+    weather_icon = current_forecast['icon']
+    if hour >= astronomy_data['sun_phase']['sunset']['hour'] and minute > astronomy_data['sun_phase']['sunset']['minute']:
+        print 'Sunset - night'
+        weather_icon_css = "wi-night-" + weather_icon
+    else:
+        print 'Sunrise - day'
+        if weather_icon == 'clear':
+            weather_icon = 'sunny'
+        weather_icon_css = "wi-day-" + weather_icon
+
     weather_html = '<table style="width: 100%; border-top: 1px solid rgba(255,255,255,.1);"><tbody><tr>'
-    weather_html += '<td style="padding: 0 20px 10px 20px; width: 250px;">'
+    weather_html += '<td style="padding: 0 20px 15px 20px; width: 250px;">'
     weather_html += '<div class="bright large">' + str(current_forecast['temp_c']) + '<sup>&deg;</sup>'
-    weather_html += '<span class="wi wi-day-sunny" style="font-size: 70px;" title="clear"></span>'
+    weather_html += '<span class="wi ' + weather_icon_css + '" style="font-size: 70px;" title="clear"></span>'
     weather_html += '</div>'
 
-    weather_html += '<div class="semi_bold" style="margin-top: 5px;">'
+    weather_html += '<div class="semi-bold">'
 
-    current_hour = datetime.now().strftime('%H')
-    current_minute = datetime.now().strftime('%M')
     wind = "%s kph %s" % (current_forecast['wind_kph'], current_forecast['wind_dir'])
 
     weather_html += '<span class="wi wi-strong-wind"></span> ' + wind + ' &nbsp;<span class="wi wi-wind-default _%s-deg"></span> &nbsp;&nbsp;' % current_forecast['wind_degrees']
 
-    if current_hour >= astronomy_data['sun_phase']['sunset']['hour'] and current_minute > astronomy_data['sun_phase']['sunset']['minute']:
+    # TODO, make function
+    if hour >= astronomy_data['sun_phase']['sunset']['hour'] and minute > astronomy_data['sun_phase']['sunset']['minute']:
         print 'Sunset'
         weather_html += '<span class="wi wi-sunrise"></span> %s:%s</div>' % (astronomy_data['sun_phase']['sunrise']['hour'], astronomy_data['sun_phase']['sunrise']['minute'])
     else:
@@ -85,11 +100,26 @@ def forecast_10_days(request):
     for node in ten_days_forecast[:4]:
         date = node['date']
 
+        print 'Node: ', node
+
+        weather_icon = node['icon']
+        if hour >= astronomy_data['sun_phase']['sunset']['hour'] and minute > astronomy_data['sun_phase']['sunset']['minute']:
+            print 'Sunset - night'
+            weather_icon_css = "wi-night-" + weather_icon
+        else:
+            print 'Sunrise - day'
+            if weather_icon == 'clear':
+                weather_icon = 'sunny'
+            elif weather_icon == 'partlycloudy':
+                weather_icon = 'sunny-overcast'
+
+            weather_icon_css = "wi-day-" + weather_icon
+
         weather_html += '<td style="padding: 5px 40px; text-align: center; border-left: 1px solid rgba(255,255,255,.1); line-height: 2em;">'
-        weather_html += '<div class="day">' + date['weekday'] + '</div>'
-        weather_html += '<span class="wi wi-day-cloudy bright medium"></span><br/>'
-        weather_html += '<span class="bright semi_bold" style="margin: 0 10px;">' + node['high']['celsius'] + '</span>'
-        weather_html += '<span class="bright semi_bold" style="margin: 0 10px;">' + node['low']['celsius'] + '</span></td>'
+        weather_html += '<div class="day bold" style="margin-bottom: 15px">' + date['weekday'] + '</div>'
+        weather_html += '<span class="wi ' + weather_icon_css + ' bright medium"></span><br/>'
+        weather_html += '<span class="bright semi-bold" style="margin: 0 10px;">' + node['high']['celsius'] + '</span>'
+        weather_html += '<span class="bright semi-bold" style="margin: 0 10px;">' + node['low']['celsius'] + '</span></td>'
 
         # print 'Count: ', count
         # date = node['date']

@@ -122,6 +122,10 @@ table td .more_events {
     color: #FFF;
 }
 
-.semi_bold {
+.semi-bold {
     font-weight: 600;
+}
+
+.bold {
+    font-weight: 700;
 }
