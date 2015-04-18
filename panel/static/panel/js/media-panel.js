@@ -110,10 +110,6 @@
 		 *
 		 */
 		api.updateBackground = function() {
-            /*$("#progressTimer").progressTimer({
-                timeLimit: 30,
-                baseStyle: 'progress-bar-info',
-            });*/
             var top;
             var bottom;
 

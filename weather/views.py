@@ -44,6 +44,7 @@ def forecast_10_days(request):
     # hourly_forecast_data = json.loads(forecast_hourly_response.read().decode())
 
     print 'astronomy_data: ', astronomy_data
+    print 'current_forecast_data: ', current_forecast_data
 
     try:
         current_forecast = current_forecast_data['current_observation']
@@ -54,12 +55,12 @@ def forecast_10_days(request):
     print "Data fetched successfully"
 
     weather_html = '<table style="width: 100%; border-top: 1px solid rgba(255,255,255,.1);"><tbody><tr>'
-    weather_html += '<td style="padding: 0 20px 5px 20px; width: 250px;">'
+    weather_html += '<td style="padding: 0 20px 10px 20px; width: 250px;">'
     weather_html += '<div class="bright large">' + str(current_forecast['temp_c']) + '<sup>&deg;</sup>'
     weather_html += '<span class="wi wi-day-sunny" style="font-size: 70px;" title="clear"></span>'
     weather_html += '</div>'
 
-    weather_html += '<div style="margin-top: 15px;">'
+    weather_html += '<div class="semi_bold" style="margin-top: 5px;">'
 
     current_hour = datetime.now().strftime('%H')
     current_minute = datetime.now().strftime('%M')
@@ -87,8 +88,8 @@ def forecast_10_days(request):
         weather_html += '<td style="padding: 5px 40px; text-align: center; border-left: 1px solid rgba(255,255,255,.1); line-height: 2em;">'
         weather_html += '<div class="day">' + date['weekday'] + '</div>'
         weather_html += '<span class="wi wi-day-cloudy bright medium"></span><br/>'
-        weather_html += '<span class="bright" style="margin: 0 10px;">' + node['high']['celsius'] + '</span>'
-        weather_html += '<span class="bright" style="margin: 0 10px;">' + node['low']['celsius'] + '</span></td>'
+        weather_html += '<span class="bright semi_bold" style="margin: 0 10px;">' + node['high']['celsius'] + '</span>'
+        weather_html += '<span class="bright semi_bold" style="margin: 0 10px;">' + node['low']['celsius'] + '</span></td>'
 
         # print 'Count: ', count
         # date = node['date']
