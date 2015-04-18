@@ -76,7 +76,7 @@ def flatten_folder_tree():
     print 'flatten_folder_tree > base_path > ', base_path
     for dir_path, dir_names, file_names in os.walk(base_path, followlinks=True):
         for filename in filter(is_image_file, file_names):
-            print '>>: ', os.path.join(dir_path, filename)
+            # print '>>: ', os.path.join(dir_path, filename)
             all_photos.append(os.path.join(dir_path, filename))
 
 

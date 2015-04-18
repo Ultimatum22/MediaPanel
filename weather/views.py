@@ -60,8 +60,10 @@ def forecast_10_days(request):
     hour = int(pattern.search(time_string).group(1))
     minute = int(pattern.search(time_string).group(2))
 
+    print '%s >= %s and %s > %s' % (hour, astronomy_data['sun_phase']['sunset']['hour'], minute, astronomy_data['sun_phase']['sunset']['minute'])
+
     weather_icon = current_forecast['icon']
-    if hour >= astronomy_data['sun_phase']['sunset']['hour'] and minute > astronomy_data['sun_phase']['sunset']['minute']:
+    if hour >= astronomy_data['sun_phase']['sunset']['hour'] and (hour >= astronomy_data['sun_phase']['sunset']['hour'] or minute > astronomy_data['sun_phase']['sunset']['minute']):
         print 'Sunset - night'
         weather_icon_css = "wi-night-" + weather_icon
     else:
@@ -84,11 +86,11 @@ def forecast_10_days(request):
 
     # TODO, make function
     if hour >= astronomy_data['sun_phase']['sunset']['hour'] and minute > astronomy_data['sun_phase']['sunset']['minute']:
-        print 'Sunset'
-        weather_html += '<span class="wi wi-sunrise"></span> %s:%s</div>' % (astronomy_data['sun_phase']['sunrise']['hour'], astronomy_data['sun_phase']['sunrise']['minute'])
-    else:
-        print 'Sunrise'
+        print 'Sunset1'
         weather_html += '<span class="wi wi-sunset"></span> %s:%s</div>' % (astronomy_data['sun_phase']['sunset']['hour'], astronomy_data['sun_phase']['sunset']['minute'])
+    else:
+        print 'Sunrise1'
+        weather_html += '<span class="wi wi-sunrise"></span> %s:%s</div>' % (astronomy_data['sun_phase']['sunrise']['hour'], astronomy_data['sun_phase']['sunrise']['minute'])
 
     weather_html += '</td>'
 
@@ -103,7 +105,7 @@ def forecast_10_days(request):
         print 'Node: ', node
 
         weather_icon = node['icon']
-        if hour >= astronomy_data['sun_phase']['sunset']['hour'] and minute > astronomy_data['sun_phase']['sunset']['minute']:
+        if hour >= astronomy_data['sun_phase']['sunset']['hour'] and (hour >= astronomy_data['sun_phase']['sunset']['hour'] or minute > astronomy_data['sun_phase']['sunset']['minute']):
             print 'Sunset - night'
             weather_icon_css = "wi-night-" + weather_icon
         else:
@@ -116,8 +118,8 @@ def forecast_10_days(request):
             weather_icon_css = "wi-day-" + weather_icon
 
         weather_html += '<td style="padding: 5px 40px; text-align: center; border-left: 1px solid rgba(255,255,255,.1); line-height: 2em;">'
-        weather_html += '<div class="day bold medium">' + date['weekday'] + '</div>'
-        weather_html += '<span class="wi ' + weather_icon_css + ' bright medium" style="margin: 10px 0"></span><br/>'
+        weather_html += '<div class="day medium">' + date['weekday'] + '</div>'
+        weather_html += '<span class="wi ' + weather_icon_css + ' bright medium" style="margin: 13px 0"></span><br/>'
         weather_html += '<span class="bright semi-bold medium" style="margin: 0 10px;">' + node['high']['celsius'] + '</span>'
         weather_html += '<span class="bright semi-bold medium" style="margin: 0 10px;">' + node['low']['celsius'] + '</span></td>'
 
