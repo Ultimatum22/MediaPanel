@@ -80,7 +80,7 @@ def forecast_10_days(request):
 
     wind = "%s kph %s" % (current_forecast['wind_kph'], current_forecast['wind_dir'])
 
-    weather_html += '<span class="wi wi-strong-wind"></span> ' + wind + ' &nbsp;<span class="wi wi-wind-default _%s-deg"></span> &nbsp;&nbsp;' % current_forecast['wind_degrees']
+    weather_html += '<span class="wi wi-strong-wind"></span> ' + wind + ' &nbsp;&nbsp;'
 
     # TODO, make function
     if hour >= astronomy_data['sun_phase']['sunset']['hour'] and minute > astronomy_data['sun_phase']['sunset']['minute']:
@@ -97,7 +97,7 @@ def forecast_10_days(request):
     # forecast_iter = enumerate(forecast)
     # forecast_iter.next();
     # for i, node in forecast_iter:
-    for node in ten_days_forecast[:4]:
+    for node in ten_days_forecast[:6]:
         date = node['date']
 
         print 'Node: ', node

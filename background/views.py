@@ -22,7 +22,13 @@ def index(request):
     if not os.path.exists(tmp_directory):
         os.makedirs(tmp_directory)
 
+    print 'len(downloaded_photos)1 >> ', len(downloaded_photos)
+
     random_photo = random.choice(downloaded_photos)
+    downloaded_photos.remove(random_photo)
+
+    print 'len(downloaded_photos)2 >> ', len(downloaded_photos)
+
     return HttpResponse(json.dumps(get_photo_info(random_photo)), content_type="application/json")
 
 
@@ -30,7 +36,7 @@ def update(request):
     print "update background"
     flatten_folder_tree()
     print 'all_photos ', len(all_photos)
-    grab_random_photos(10)
+    grab_random_photos(12)
     print 'downloaded_photos ', len(downloaded_photos)
 
     return HttpResponse(None)
