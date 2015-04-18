@@ -57,13 +57,16 @@ def grab_random_photos(number):
 
             shutil.copy2(image_path, random_photo_file)
 
-            # try:
-            #     size = 1920, 1080
-            #     im = Image.open(random_photo_file)
-            #     im.thumbnail(size, Image.ANTIALIAS)
-            #     im.save(random_photo_file, "JPEG")
-            # except IOError:
-            #     print "cannot create thumbnail for '%s'" % random_photo_file
+            try:
+                image = Image.open(random_photo_file)
+
+                width = 2538
+                height = int(float(image.size[1]) * float(width / float(image.size[0])))
+
+                image.thumbnail((width, height), Image.ANTIALIAS)
+                image.save(random_photo_file, "JPEG")
+            except IOError:
+                print "cannot create thumbnail for '%s'" % random_photo_file
 
             downloaded_photos.append(random_photo_file)
 
