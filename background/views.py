@@ -60,7 +60,7 @@ def grab_random_photos(number):
             try:
                 image = Image.open(random_photo_file)
 
-                width = 2538
+                width = 2048
                 height = int(float(image.size[1]) * float(width / float(image.size[0])))
 
                 image.thumbnail((width, height), Image.ANTIALIAS)
