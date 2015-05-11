@@ -19,7 +19,7 @@ def index(request):
     max_events = 2
 
     get_events('dave.nieuwenhuijzen@gmail.com')
-    get_events('hkrpljfuicb98hih7205ul6dgk@group.calendar.google.com') # RIBW
+    get_events('dmtdq4ctio82ndifmtu66f7slc@group.calendar.google.com') # Todo
     #get_events('qv5nr1cqmt4tlut05old032en9g3h6id@import.calendar.google.com') # ZPV-Piranha
 
     events_html = '<table id="events_table"><tbody><tr>'
@@ -63,8 +63,6 @@ def index(request):
 
                     events_on_day += 1
                     events_html += '<li><span class="bright">%s</span> <span class="bright semi-bold">%s</span></li>' % (event.start_date.strftime("%H:%M"),  event.summary)
-
-
 
         events_html += '</ul>'
         events_html += '</td>'

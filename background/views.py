@@ -122,23 +122,15 @@ def get_photo_info(image_path1):
 
 
 def get_minimum_creation_time(exif_data):
-    mtime = "?"
-    #if 306 in exif_data and exif_data[306] < mtime: # 306 = DateTime
-    #    mtime = exif_data[306]
-    """if 'EXIF DateTimeOriginal' in exif_tags and exif_tags['EXIF DateTimeOriginal'] < mtime:  # 36867 = DateTimeOriginal
-        mtime = exif_tags['EXIF DateTimeOriginal']
-    if 'EXIF DateTimeDigitized' in exif_tags and exif_tags['EXIF DateTimeDigitized'] < mtime:  # 36868 = DateTimeDigitized
-        mtime = exif_tags['EXIF DateTimeDigitized']
-    return mtime"""
+    creation_time = "?"
+    if 306 in exif_data and exif_data[306] < creation_time: # 306 = DateTime
+        creation_time = exif_data[306]
+    if 36867 in exif_data and exif_data[36867] < creation_time:  # 36867 = DateTimeOriginal
+        creation_time = exif_data[36867]
+    if 36868 in exif_data and exif_data[36868] < creation_time:  # 36868 = DateTimeDigitized
+        creation_time = exif_data[36868]
 
-    mtime = "?"
-    if 306 in exif_data and exif_data[306] < mtime: # 306 = DateTime
-        mtime = exif_data[306]
-    if 36867 in exif_data and exif_data[36867] < mtime:  # 36867 = DateTimeOriginal
-        mtime = exif_data[36867]
-    if 36868 in exif_data and exif_data[36868] < mtime:  # 36868 = DateTimeDigitized
-        mtime = exif_data[36868]
-    return mtime
+    return creation_time
 
 
 def is_image_file(filename, extensions=['.jpg', '.jpeg', '.gif', '.png']):

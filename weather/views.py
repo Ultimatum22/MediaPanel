@@ -1,13 +1,4 @@
-import json
-import os
-import re
-from urllib import quote, urlopen
-from urllib2 import URLError
-import configparser
-from datetime import datetime
-
 from django.http import HttpResponse
-from mediapanel.settings import BASE_DIR
 
 # temp_file = os.path.join('MediaPanel', 'tmp', 'pywu.cache.json')
 # conf_file = os.path.join(BASE_DIR, 'weather', ".pywu.conf")

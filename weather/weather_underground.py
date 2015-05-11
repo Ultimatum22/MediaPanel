@@ -82,8 +82,6 @@ class WeatherUnderground(object):
             self.forecast = data['forecast']['simpleforecast']['forecastday']
 
     def get_sun_phase(self, local_time):
-        # astronomy_data = self.get_weather_data(WeatherPath.astronomy)
-
         pattern = re.compile(r'[A-Za-z]+ \d+ (.+):(.+):\d+')
         hour = int(pattern.search(local_time).group(1))
         minute = int(pattern.search(local_time).group(2))
