@@ -80,42 +80,91 @@ def flatten_folder_tree():
             all_photos.append(os.path.join(dir_path, filename))
 
 
-def get_photo_info(image_path1):
-    taken_by = None
-    image_path = image_path1.replace("\\", "/")
+def get_photo_info(image_path):
+    image_path = image_path.replace("\\", "/")
+
     album = ""
+    taken_by = None
     image_data = image_path.split("/")
 
     date_taken = datetime.datetime.now().replace(tzinfo=utc)
-
     try:
         if Image.open(image_path)._getexif() is not None:
-            minimum_creation_time = get_minimum_creation_time(Image.open(image_path)._getexif())
+            creation_time = get_minimum_creation_time(Image.open(image_path)._getexif())
 
-            if minimum_creation_time is None:
-                date_taken = datetime.datetime.now().replace(tzinfo=utc)
+            if creation_time is None:
+                date_taken = 0
             else:
-                date_taken = dateutil.parse(minimum_creation_time.replace(':', '-', 2)).replace(tzinfo=utc)
+                date_taken = dateutil.parse(creation_time.replace(':', '-', 2)).replace(tzinfo=utc)
     except AttributeError:
-        print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> AttributeError"
+        pass # Do nothing if no date was in the photo property
 
-    taken_by = None
-    # image_path = image_path.replace("\\", "/")
-    # image_data = image_path.split(os.path.altsep)
+    image_data = image_data[3:]  # Strip first 3 elements off the aray
 
     print 'image_data: ', len(image_data)
-    print 'image_data1: ', image_data[:-2]
-    if len(image_data) > 2:
-        taken_by = image_data[-2]
-        album = string.join(image_data[3:-1], ' / ')
+    print 'image_data: ', image_data
 
     response_data = {}
+    # if len(image_data) > 2:
+    #     taken_by = image_data[-2]
+    #     album = string.join(image_data[3:-1], ' / ')
+    #
+    # response_data['path'] = image_path
+    # response_data['album'] = album
+    # response_data['taken_by'] = taken_by
+    # response_data['date_taken'] = str(date_taken)
+
     response_data['path'] = image_path
+
+    image_data_length = len(image_data)
+    if image_data_length >= 2:
+        album = image_data[-3]
+
+    if image_data_length >= 3:
+        taken_by = image_data[-2]
+
+    if image_data_length >= 4:
+        album = string.join(image_data[:-2], ' / ')
+
     response_data['album'] = album
     response_data['taken_by'] = taken_by
     response_data['date_taken'] = str(date_taken)
 
-    print 'image_path: ', image_path
+
+
+
+
+
+
+
+
+    # taken_by = None
+    #     if Image.open(image_path)._getexif() is not None:
+    #         minimum_creation_time = get_minimum_creation_time(Image.open(image_path)._getexif())
+    #
+    #         if minimum_creation_time is None:
+    #             date_taken = datetime.datetime.now().replace(tzinfo=utc)
+    #         else:
+    #             date_taken = dateutil.parse(minimum_creation_time.replace(':', '-', 2)).replace(tzinfo=utc)
+    # except AttributeError:
+    #     print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> AttributeError"
+    #
+    # taken_by = None
+    # # image_path = image_path.replace("\\", "/")
+    # # image_data = image_path.split(os.path.altsep)
+    #
+    # print 'image_data: ', len(image_data)
+    # print 'image_data1: ', image_data[:-2]
+    # if len(image_data) > 2:
+    #     taken_by = image_data[-2]
+    #     album = string.join(image_data[3:-1], ' / ')
+    #
+    # response_data['path'] = image_path
+    # response_data['album'] = album
+    # response_data['taken_by'] = taken_by
+    # response_data['date_taken'] = str(date_taken)
+    #
+    # print 'image_path: ', image_path
 
     # os.remove(image_path)
 
