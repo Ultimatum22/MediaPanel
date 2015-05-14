@@ -75,7 +75,6 @@
                 api.updateWeather();
             }, 3600000);
 
-            $('#weather').css('width', $('#weather').outerWidth() - 200);
             $('.forecast').css('width', ($('#weather').outerWidth() / 5));
         };
 
@@ -130,7 +129,7 @@
                 owner += ' <span class="dark">taken</span>  ' + date_taken.getDate() + ' ' + full_months[date_taken.getMonth()] + ' ' + date_taken.getFullYear();
 
                 $('#img-owner').html(owner);
-                $('#img-title').html('<span class="dark">Album</span>  ' + data.album);
+                $('#img-title').html(data.album);
 
                 bottom.show();
 
@@ -138,14 +137,7 @@
                     top.hide().css({background: 'none', zIndex: 0});
                     bottom.css({zIndex: 1});
                 });
-
-//                top.fadeOut(1500, function() {
-//                    top.hide().css({ background: 'none', zIndex: 0 });
-//                    bottom.css({ zIndex: 1 });
-//                    $('#img-info').fadeIn(1000);
-//                });
-			
-			}); //end getJSON
+			});
 
             setTimeout(function() {
                 api.updateBackground();

@@ -17,7 +17,7 @@ def forecast(request):
 
     # if weather.get_sun_phase(current_forecast['local_time_rfc822']):
 
-    weather_html = '<table style="width: 100%; border-top: 1px solid rgba(255,255,255,.1);"><tbody><tr>'
+    weather_html = '<table style="width: 80%; border-top: 1px solid rgba(255,255,255,.1);"><tbody><tr>'
     weather_html += '<td style="padding: 0 20px 15px 20px; width: 250px;">'
     weather_html += '<div class="bright large">' + str(weather.current_forecast['temp_c']) + '<sup>&deg;</sup>'
     weather_html += '<span class="wi ' + weather.get_weather_icon(weather.current_forecast['icon'], weather.current_forecast['local_time_rfc822']) + '" style="font-size: 70px;" title="clear"></span>'

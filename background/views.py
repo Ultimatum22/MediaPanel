@@ -44,8 +44,8 @@ def update(request):
 
 def grab_random_photos(number):
     if len(downloaded_photos) < 10:
-        if os.path.exists(tmp_directory):
-            shutil.rmtree(tmp_directory, ignore_errors=True)
+        # if os.path.exists(tmp_directory):
+        #     shutil.rmtree(tmp_directory, ignore_errors=True)
 
         for i in range(0, number):
             image_path = random.choice(all_photos)
