@@ -80,11 +80,11 @@ def flatten_folder_tree():
             all_photos.append(os.path.join(dir_path, filename))
 
 
-def get_photo_info(image_path):
+def get_photo_info(image_path1):
     taken_by = None
-    # image_path = image_path1.replace("\\", "/")
+    image_path = image_path1.replace("\\", "/")
     album = ""
-    image_data = image_path.split("\\")
+    image_data = image_path.split("/")
 
     date_taken = datetime.datetime.now().replace(tzinfo=utc)
 
