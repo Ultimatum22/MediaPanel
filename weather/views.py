@@ -35,7 +35,7 @@ def forecast(request):
 
     weather_html += '</td>'
 
-    for node in weather.forecast[:6]:
+    for node in weather.forecast[:4]:
         date = node['date']
 
         weather_html += '<td style="padding: 5px 40px; text-align: center; border-left: 1px solid rgba(255,255,255,.1); line-height: 2em;">'

@@ -101,4 +101,6 @@ class WeatherUnderground(object):
                 icon = 'sunny-overcast'
             elif icon == 'chancerain':
                 icon = 'rain'
+            elif icon == 'mostlycloudy':
+                icon = 'cloudy'
             return 'wi-day-' + icon

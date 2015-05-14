@@ -75,6 +75,7 @@
                 api.updateWeather();
             }, 3600000);
 
+            $('#weather').css('width', $('#weather').outerWidth() - 200);
             $('.forecast').css('width', ($('#weather').outerWidth() / 5));
         };
 
@@ -107,7 +108,7 @@
 			}
 
 			$.getJSON('/background', function(data) {
-                $('#img-info').fadeOut(1000);
+//                $('#img-info').fadeOut(1000);
 
                 $(this).remove(); // prevent memory leaks
                 bottom.css({
@@ -138,11 +139,11 @@
                     bottom.css({zIndex: 1});
                 });
 
-                top.fadeOut(1500, function() {
-                    top.hide().css({ background: 'none', zIndex: 0 });
-                    bottom.css({ zIndex: 1 });
-                    $('#img-info').fadeIn(1000);
-                });
+//                top.fadeOut(1500, function() {
+//                    top.hide().css({ background: 'none', zIndex: 0 });
+//                    bottom.css({ zIndex: 1 });
+//                    $('#img-info').fadeIn(1000);
+//                });
 			
 			}); //end getJSON
 

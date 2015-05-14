@@ -44,6 +44,9 @@ def update(request):
 
 def grab_random_photos(number):
     if len(downloaded_photos) < 10:
+        if os.path.exists(tmp_directory):
+            shutil.rmtree(tmp_directory, ignore_errors=True)
+
         for i in range(0, number):
             image_path = random.choice(all_photos)
 
@@ -101,19 +104,7 @@ def get_photo_info(image_path):
 
     image_data = image_data[3:]  # Strip first 3 elements off the aray
 
-    print 'image_data: ', len(image_data)
-    print 'image_data: ', image_data
-
-    response_data = {}
-    # if len(image_data) > 2:
-    #     taken_by = image_data[-2]
-    #     album = string.join(image_data[3:-1], ' / ')
-    #
-    # response_data['path'] = image_path
-    # response_data['album'] = album
-    # response_data['taken_by'] = taken_by
-    # response_data['date_taken'] = str(date_taken)
-
+    response_data = dict()
     response_data['path'] = image_path
 
     image_data_length = len(image_data)
@@ -129,44 +120,6 @@ def get_photo_info(image_path):
     response_data['album'] = album
     response_data['taken_by'] = taken_by
     response_data['date_taken'] = str(date_taken)
-
-
-
-
-
-
-
-
-
-    # taken_by = None
-    #     if Image.open(image_path)._getexif() is not None:
-    #         minimum_creation_time = get_minimum_creation_time(Image.open(image_path)._getexif())
-    #
-    #         if minimum_creation_time is None:
-    #             date_taken = datetime.datetime.now().replace(tzinfo=utc)
-    #         else:
-    #             date_taken = dateutil.parse(minimum_creation_time.replace(':', '-', 2)).replace(tzinfo=utc)
-    # except AttributeError:
-    #     print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> AttributeError"
-    #
-    # taken_by = None
-    # # image_path = image_path.replace("\\", "/")
-    # # image_data = image_path.split(os.path.altsep)
-    #
-    # print 'image_data: ', len(image_data)
-    # print 'image_data1: ', image_data[:-2]
-    # if len(image_data) > 2:
-    #     taken_by = image_data[-2]
-    #     album = string.join(image_data[3:-1], ' / ')
-    #
-    # response_data['path'] = image_path
-    # response_data['album'] = album
-    # response_data['taken_by'] = taken_by
-    # response_data['date_taken'] = str(date_taken)
-    #
-    # print 'image_path: ', image_path
-
-    # os.remove(image_path)
 
     return response_data
 
