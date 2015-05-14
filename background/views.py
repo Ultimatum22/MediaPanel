@@ -80,10 +80,11 @@ def flatten_folder_tree():
             all_photos.append(os.path.join(dir_path, filename))
 
 
-def get_photo_info(image_path1):
+def get_photo_info(image_path):
     taken_by = None
-    image_path = image_path1.replace("\\", "/")
-    image_data = image_path.split(os.path.altsep)
+    # image_path = image_path1.replace("\\", "/")
+    album = ""
+    image_data = image_path.split("\\")
 
     date_taken = datetime.datetime.now().replace(tzinfo=utc)
 
@@ -99,8 +100,8 @@ def get_photo_info(image_path1):
         print ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> AttributeError"
 
     taken_by = None
-    image_path = image_path.replace("\\", "/")
-    image_data = image_path.split(os.path.altsep)
+    # image_path = image_path.replace("\\", "/")
+    # image_data = image_path.split(os.path.altsep)
 
     print 'image_data: ', len(image_data)
     print 'image_data1: ', image_data[:-2]
